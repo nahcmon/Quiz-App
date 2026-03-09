@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "installCommand": "ROOT=$(git rev-parse --show-toplevel) && cd \"$ROOT\" && npx -y npm@10.9.2 ci --include=dev --workspace @quiz/shared --workspace @quiz/web --include-workspace-root",
   "buildCommand": "node \"$(git rev-parse --show-toplevel)/scripts/vercel-web-build.mjs\"",
   "outputDirectory": "dist-public",
