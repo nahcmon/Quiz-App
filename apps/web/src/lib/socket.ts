@@ -12,11 +12,16 @@ let socketSingleton:
   | null = null;
 
 export function getSocket() {
+  if (!env.serverUrl) {
+    throw new Error("Live-Verbindung ist auf dieser Bereitstellung noch nicht verfügbar.");
+  }
+
   if (!socketSingleton) {
     socketSingleton = io(env.serverUrl, {
       transports: ["websocket", "polling"],
       withCredentials: true,
-      autoConnect: true
+      autoConnect: true,
+      timeout: 8_000
     });
   }
   return socketSingleton;

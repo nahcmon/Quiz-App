@@ -19,7 +19,7 @@ import {
   loadReconnectRecord,
   saveReconnectRecord
 } from "../lib/localStore";
-import { env } from "../lib/env";
+import { env, getServerConfigurationError } from "../lib/env";
 import { getSocket } from "../lib/socket";
 import { useLibraryStore } from "./useLibraryStore";
 import { useSettingsStore } from "./useSettingsStore";
@@ -58,6 +58,69 @@ interface SessionState {
   endSession: (reason: "host_ended" | "completed") => void;
   submitAnswer: (questionIndex: number, optionId: string) => void;
   reset: () => void;
+}
+
+const REQUEST_TIMEOUT_MS = 8_000;
+const SOCKET_UNAVAILABLE_MESSAGE =
+  "Live-Verbindung konnte nicht hergestellt werden. Bitte versuche es erneut.";
+
+let pendingRequestTimer: number | null = null;
+
+function clearPendingRequestTimer() {
+  if (pendingRequestTimer === null || typeof window === "undefined") {
+    return;
+  }
+
+  window.clearTimeout(pendingRequestTimer);
+  pendingRequestTimer = null;
+}
+
+function startPendingRequestTimer(
+  set: (partial: Partial<SessionState>) => void,
+  get: () => SessionState,
+  message = SOCKET_UNAVAILABLE_MESSAGE
+) {
+  clearPendingRequestTimer();
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  pendingRequestTimer = window.setTimeout(() => {
+    if (!get().loading) {
+      return;
+    }
+
+    set({
+      loading: false,
+      error: message
+    });
+  }, REQUEST_TIMEOUT_MS);
+}
+
+function getSocketOrSetError(
+  set: (partial: Partial<SessionState>) => void
+) {
+  const configurationError = getServerConfigurationError(env.serverUrl);
+  if (configurationError) {
+    set({
+      loading: false,
+      connected: false,
+      error: configurationError
+    });
+    return null;
+  }
+
+  try {
+    return getSocket();
+  } catch (error) {
+    set({
+      loading: false,
+      connected: false,
+      error:
+        error instanceof Error ? error.message : SOCKET_UNAVAILABLE_MESSAGE
+    });
+    return null;
+  }
 }
 
 function mergeSessionPatch(current: SessionView, patch: SessionPatch): SessionView {
@@ -114,22 +177,59 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       return;
     }
 
-    const socket = getSocket();
-    socket.on("connect", () => set({ connected: true }));
-    socket.on("disconnect", () => set({ connected: false }));
-    socket.on("session:error", (payload) =>
+    const socket = getSocketOrSetError(set);
+    if (!socket) {
+      set({ initialized: true });
+      return;
+    }
+
+    socket.on("connect", () => {
+      clearPendingRequestTimer();
+      set((state) => ({
+        connected: true,
+        error:
+          state.error === SOCKET_UNAVAILABLE_MESSAGE ? null : state.error
+      }));
+    });
+    socket.on("disconnect", () => {
+      clearPendingRequestTimer();
+      set((state) => ({
+        connected: false,
+        loading: false,
+        error:
+          state.loading && !state.session
+            ? SOCKET_UNAVAILABLE_MESSAGE
+            : state.error
+      }));
+    });
+    socket.on("connect_error", () => {
+      clearPendingRequestTimer();
       set({
-        error: payload.message,
-        loading: false
-      })
+        connected: false,
+        loading: false,
+        error: SOCKET_UNAVAILABLE_MESSAGE
+      });
+    });
+    socket.on("session:error", (payload) =>
+      {
+        clearPendingRequestTimer();
+        set({
+          error: payload.message,
+          loading: false
+        });
+      }
     );
     socket.on("session:probeResult", (payload) =>
-      set({
-        probeResult: SessionProbeResultSchema.parse(payload),
-        loading: false
-      })
+      {
+        clearPendingRequestTimer();
+        set({
+          probeResult: SessionProbeResultSchema.parse(payload),
+          loading: false
+        });
+      }
     );
     socket.on("session:created", (payload) => {
+      clearPendingRequestTimer();
       persistReconnect(
         payload.code,
         "host",
@@ -148,6 +248,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       });
     });
     socket.on("session:joined", (payload) => {
+      clearPendingRequestTimer();
       persistReconnect(
         payload.code,
         "player",
@@ -167,6 +268,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       });
     });
     socket.on("reconnect:accepted", (payload) => {
+      clearPendingRequestTimer();
       const reconnect = loadReconnectRecord();
       set({
         loading: false,
@@ -311,12 +413,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   clearError: () => set({ error: null }),
   probeCode: (code) => {
     get().initialize();
+    const socket = getSocketOrSetError(set);
+    if (!socket) {
+      return;
+    }
+
     set({
       loading: true,
       error: null,
       probeResult: null
     });
-    getSocket().emit("session:probe", {
+    startPendingRequestTimer(set, get);
+    socket.connect();
+    socket.emit("session:probe", {
       code: normalizeJoinCode(code)
     });
   },
@@ -332,12 +441,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       return;
     }
     const settings = useSettingsStore.getState().settings;
+    const socket = getSocketOrSetError(set);
+    if (!socket) {
+      return;
+    }
+
     set({
       loading: true,
       error: null,
       reveal: null
     });
-    getSocket().emit("session:create", {
+    startPendingRequestTimer(set, get);
+    socket.connect();
+    socket.emit("session:create", {
       hostName,
       quiz,
       clientInfo: {
@@ -349,11 +465,18 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   },
   joinSession: (code, displayName) => {
     get().initialize();
+    const socket = getSocketOrSetError(set);
+    if (!socket) {
+      return;
+    }
+
     set({
       loading: true,
       error: null
     });
-    getSocket().emit("session:join", {
+    startPendingRequestTimer(set, get);
+    socket.connect();
+    socket.emit("session:join", {
       code: normalizeJoinCode(code),
       requestedName: displayName
     });
@@ -370,11 +493,18 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       return false;
     }
 
+    const socket = getSocketOrSetError(set);
+    if (!socket) {
+      return false;
+    }
+
     set({
       loading: true,
       error: null
     });
-    getSocket().emit("session:reconnect", {
+    startPendingRequestTimer(set, get);
+    socket.connect();
+    socket.emit("session:reconnect", {
       code: reconnect.code,
       reconnectToken: reconnect.reconnectToken,
       role

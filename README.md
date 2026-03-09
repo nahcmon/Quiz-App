@@ -91,6 +91,7 @@ Pulse Quiz is built for public HTTPS/WSS deployment.
 - Set `VITE_SERVER_URL` on the web app to the exact public backend origin
 - This repo resolves the git top-level automatically during the Vercel web build, so the frontend build can still run even if the Vercel project root is not the repository root
 - The Vercel config pins the framework preset to `Other`, so the generated frontend bundle is treated as static output instead of a Node entrypoint
+- If the web app is hosted on Vercel, the realtime backend still needs to run on a separate public server URL. The frontend must not rely on `:3001` on the Vercel domain itself.
 
 ### V1 deployment target
 
@@ -110,6 +111,7 @@ There is no shared session store, sticky-session layer, Redis adapter, or databa
   - Public web URL used to generate the canonical join URL
 - `VITE_SERVER_URL`
   - Public backend URL used by `socket.io-client`
+  - On Vercel, set this in Project Settings so the built frontend points to your public realtime backend instead of guessing one
 
 #### Server
 
