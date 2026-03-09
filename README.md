@@ -86,6 +86,7 @@ Pulse Quiz is built for public HTTPS/WSS deployment.
 - Set `CLIENT_ORIGIN` on the server to the exact public web origin
 - Set `VITE_PUBLIC_APP_URL` on the web app to the exact public web origin
 - Set `VITE_SERVER_URL` on the web app to the exact public backend origin
+- If you deploy the web app on Vercel, keep the project root at the repository root so the `@quiz/shared` workspace is available during install and build
 
 ### V1 deployment target
 
