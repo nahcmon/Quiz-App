@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #07111f;
+  --color-ocean: #0c4fd9;
+  --color-mint: #5ef2c3;
+  --color-ember: #ff7b48;
+  --color-sun: #ffd54f;
+  --color-cloud: #f8fbff;
+  --color-dusk: #10203d;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --shadow-panel: 0 22px 80px rgba(10, 17, 40, 0.18);
+  --background-image-hero-grid:
+    radial-gradient(circle at top left, rgba(94, 242, 195, 0.16), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255, 123, 72, 0.14), transparent 42%);
+}
+
+:root {
+  color: #07111f;
+  background: #f8fbff;
+  font-family: "Manrope", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(94, 242, 195, 0.18), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(255, 123, 72, 0.14), transparent 36%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(12, 79, 217, 0.18);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.segmented-code-grid {
+  contain: layout paint;
+}
+
+.ui-pop-in {
+  animation: ui-pop-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.ui-shake-in {
+  animation: ui-shake-in 220ms ease-in-out;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.segmented-code-char {
+  display: inline-block;
+  min-width: 1ch;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.segmented-code-char-pop {
+  animation: segmented-code-pop 180ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.segmented-code-status-pop {
+  animation: segmented-code-status-pop 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.segmented-code-status-fade {
+  animation: segmented-code-status-fade 220ms ease;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+.segmented-code-shake {
+  animation: segmented-code-shake 220ms ease-in-out;
+}
+
+@keyframes segmented-code-pop {
+  0% {
+    opacity: 0;
+    transform: translateZ(0) scale(0.84);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateZ(0) scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+@keyframes ui-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateZ(0) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+@keyframes ui-shake-in {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(8px);
+  }
+
+  60% {
+    transform: translateX(-6px);
+  }
+
+  80% {
+    transform: translateX(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes segmented-code-status-pop {
+  0% {
+    opacity: 0;
+    transform: translateZ(0) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+@keyframes segmented-code-status-fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes segmented-code-shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(8px);
+  }
+
+  60% {
+    transform: translateX(-6px);
+  }
+
+  80% {
+    transform: translateX(6px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pop-in,
+  .ui-shake-in,
+  .segmented-code-char-pop,
+  .segmented-code-status-pop,
+  .segmented-code-status-fade,
+  .segmented-code-shake {
+    animation: none;
+  }
+}
