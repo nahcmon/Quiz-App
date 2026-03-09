@@ -10,8 +10,9 @@
   ],
   "scripts": {
     "dev": "concurrently -k -n shared,server,web -c cyan,magenta,green \"npm run dev -w @quiz/shared\" \"wait-on packages/shared/dist/index.js && npm run dev -w @quiz/server\" \"wait-on packages/shared/dist/index.js && npm run dev -w @quiz/web\"",
-    "build": "npm run build -w @quiz/shared && npm run build -w @quiz/server && npm run build -w @quiz/web",
-    "build:vercel": "npm run build -w @quiz/shared && npm run build -w @quiz/web",
+    "build": "npm run build -w @quiz/shared && npm run build -w @quiz/web",
+    "build:all": "npm run build && npm run build -w @quiz/server",
+    "build:vercel": "npm run build",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"

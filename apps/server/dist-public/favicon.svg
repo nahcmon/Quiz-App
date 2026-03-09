@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pulse Quiz">
+  <defs>
+    <linearGradient id="pulseGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0c4fd9" />
+      <stop offset="55%" stop-color="#5ef2c3" />
+      <stop offset="100%" stop-color="#ff7b48" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#07111f" />
+  <path
+    d="M18 45V19h15.2c8.3 0 13.8 4.9 13.8 12.3S41.5 43.5 33.2 43.5H24v1.5Zm6-7h8.2c5 0 8.2-2.4 8.2-6.7s-3.2-6.8-8.2-6.8H24Z"
+    fill="url(#pulseGradient)"
+  />
+</svg>

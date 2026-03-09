@@ -73,7 +73,10 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run build:all
 ```
+
+`npm run build` builds the shared package and the production web bundle. Use `npm run build:all` if you also want to build the backend locally.
 
 ## Production deployment
 
@@ -86,7 +89,7 @@ Pulse Quiz is built for public HTTPS/WSS deployment.
 - Set `CLIENT_ORIGIN` on the server to the exact public web origin
 - Set `VITE_PUBLIC_APP_URL` on the web app to the exact public web origin
 - Set `VITE_SERVER_URL` on the web app to the exact public backend origin
-- If you deploy the web app on Vercel, keep the project root at the repository root so the `@quiz/shared` workspace is available during install and build
+- This repo resolves the git top-level automatically during the Vercel web build, so the frontend build can still run even if the Vercel project root is not the repository root
 
 ### V1 deployment target
 
