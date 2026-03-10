@@ -74,6 +74,7 @@ npm run typecheck
 npm run test
 npm run build
 npm run build:all
+npm run build:server
 ```
 
 `npm run build` builds the shared package and the production web bundle. Use `npm run build:all` if you also want to build the backend locally.
@@ -121,6 +122,52 @@ There is no shared session store, sticky-session layer, Redis adapter, or databa
   - Allowed browser origin for CORS and join URL generation
 - `PUBLIC_SERVER_URL`
   - Public server URL shown by `/healthz` and logs
+
+### Render deployment for the backend
+
+This repo includes a ready-to-use Render Blueprint in [render.yaml](/Users/davideisert/Documents/Quiz%20App/render.yaml).
+
+Recommended for a first deploy:
+
+1. Push the latest repo state to GitHub.
+2. In Render, click `New` → `Blueprint`.
+3. Select this repository.
+4. Render will detect `render.yaml` and propose the `pulse-quiz-server` web service.
+5. Create the service.
+6. In the new service, open `Environment`.
+7. Set:
+   - `CLIENT_ORIGIN=https://easy-pulse-quiz.vercel.app`
+   - `PUBLIC_SERVER_URL=https://YOUR-RENDER-SERVICE.onrender.com`
+8. Redeploy once after saving the environment variables.
+9. Wait until the service is healthy at `/healthz`.
+
+The Render web service uses:
+
+- Build command:
+  - `npm ci --include=dev --workspace @quiz/shared --workspace @quiz/server --include-workspace-root && npm run build:server`
+- Start command:
+  - `npm run start -w @quiz/server`
+- Health check path:
+  - `/healthz`
+
+Notes:
+
+- The Blueprint defaults to the `free` plan so you can get started quickly.
+- For more reliable always-on multiplayer, upgrade to a paid always-on plan in Render to avoid cold starts after idle periods.
+- Keep the service rooted at the repository root because `apps/server` depends on `packages/shared`.
+
+### Full production setup
+
+1. Deploy the backend on Render first.
+2. Copy the public Render URL, for example `https://pulse-quiz-server.onrender.com`.
+3. In Vercel, open the `easy-pulse-quiz` project.
+4. Go to `Settings` → `Environment Variables`.
+5. Set:
+   - `VITE_PUBLIC_APP_URL=https://easy-pulse-quiz.vercel.app`
+   - `VITE_SERVER_URL=https://pulse-quiz-server.onrender.com`
+6. Redeploy the Vercel project.
+7. Open `https://pulse-quiz-server.onrender.com/healthz` and confirm it returns `ok: true`.
+8. Open `https://easy-pulse-quiz.vercel.app`, start a quiz, and confirm sessions can be created and joined.
 
 ## Realtime architecture
 

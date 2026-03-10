@@ -110,6 +110,8 @@ const manager = new SessionManager({
   }
 });
 
+let shuttingDown = false;
+
 const probeLimiter = new SlidingWindowRateLimiter();
 const joinLimiter = new SlidingWindowRateLimiter();
 
@@ -188,8 +190,8 @@ io.on("connection", (socket) => {
         return;
       }
       socket.emit("session:probeResult", manager.getProbeResult(payload.code));
-    }
-  );
+  }
+);
 
   withSchema<SessionCreateInput>(
     socket,
@@ -380,4 +382,36 @@ httpServer.listen(config.port, () => {
   console.log(
     `Pulse Quiz server listening on ${config.publicServerUrl} with default web origin ${config.defaultClientOrigin}`
   );
+});
+
+function shutdown(signal: NodeJS.Signals) {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
+
+  console.log(`Received ${signal}. Shutting down Pulse Quiz server...`);
+  io.emit("session:error", {
+    event: "server:shutdown",
+    message: "Der Live-Dienst startet gerade neu. Bitte verbinde dich gleich erneut."
+  });
+
+  const forceExitTimer = setTimeout(() => {
+    process.exit(1);
+  }, 25_000);
+  forceExitTimer.unref();
+
+  void io.close(() => {
+    httpServer.close(() => {
+      process.exit(0);
+    });
+  });
+}
+
+process.on("SIGTERM", () => {
+  shutdown("SIGTERM");
+});
+
+process.on("SIGINT", () => {
+  shutdown("SIGINT");
 });

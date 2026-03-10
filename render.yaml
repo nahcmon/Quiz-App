@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: pulse-quiz-server
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev --workspace @quiz/shared --workspace @quiz/server --include-workspace-root && npm run build:server
+    startCommand: npm run start -w @quiz/server
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - apps/server/**
+        - packages/shared/**
+        - package.json
+        - package-lock.json
+        - tsconfig.base.json
+        - .node-version
+        - render.yaml
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: PORT
+        value: 10000
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: PUBLIC_SERVER_URL
+        sync: false
