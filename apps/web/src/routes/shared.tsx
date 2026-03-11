@@ -4,6 +4,7 @@ import {
   lazy,
   type ReactNode,
   useEffect,
+  useRef,
   useState
 } from "react";
 
@@ -186,6 +187,7 @@ function TimerBar({
   startedAt?: number;
   endsAt?: number;
 }) {
+  const barFillRef = useRef<HTMLDivElement | null>(null);
   const reduced = useAppReducedMotion();
   const mobilePerformanceMode = useMobilePerformanceMode();
   const simplifiedMotion = reduced || mobilePerformanceMode;
@@ -193,34 +195,60 @@ function TimerBar({
     intervalMs: 200
   });
 
+  useEffect(() => {
+    const element = barFillRef.current;
+    if (!element || !startedAt || !endsAt) {
+      return;
+    }
+
+    let frameId = 0;
+    const totalDuration = Math.max(1, endsAt - startedAt);
+
+    const paint = () => {
+      const liveRemaining = Math.max(0, endsAt - Date.now());
+      const liveProgress = Math.max(0, Math.min(1, liveRemaining / totalDuration));
+      element.style.transform = `scaleX(${liveProgress})`;
+
+      if (liveRemaining > 0) {
+        frameId = window.requestAnimationFrame(paint);
+      }
+    };
+
+    paint();
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [endsAt, startedAt]);
+
   if (!startedAt || !endsAt) {
     return null;
   }
 
   const duration = Math.max(1, endsAt - startedAt);
-  const elapsed = Math.max(0, Math.min(duration, now - startedAt));
   const remaining = Math.max(0, endsAt - now);
   const progress = Math.max(0, Math.min(1, remaining / duration));
   const remainingSeconds = Math.ceil(remaining / 1000);
   const urgent = progress <= 0.2;
   const critical = remainingSeconds <= 5;
-  const animationDelay = `${-elapsed}ms`;
 
   return (
     <div className="space-y-2">
-      <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+      <div
+        className="h-3 overflow-hidden rounded-full bg-slate-200"
+        role="progressbar"
+        aria-label="Verbleibende Zeit"
+        aria-valuemin={0}
+        aria-valuemax={duration}
+        aria-valuenow={remaining}
+      >
         <div className={`h-full ${!simplifiedMotion && urgent ? "timer-urgent-pulse" : ""}`}>
           <div
+            ref={barFillRef}
             className={`timer-bar-fill h-full rounded-full ${
               critical ? "bg-ember" : urgent ? "bg-sun" : "bg-ocean"
             }`}
-            style={{
-              animationName: "timer-shrink",
-              animationDuration: `${duration}ms`,
-              animationTimingFunction: "linear",
-              animationDelay,
-              animationFillMode: "both"
-            }}
+            style={{ transform: `scaleX(${progress})` }}
           />
         </div>
       </div>

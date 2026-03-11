@@ -82,7 +82,7 @@ function HostSessionPage() {
 
     const timeout = window.setTimeout(() => {
       if (isFinalQuestion) {
-        endSession("completed");
+        showLeaderboard(questionIndex);
         return;
       }
 
@@ -91,12 +91,12 @@ function HostSessionPage() {
 
     return () => window.clearTimeout(timeout);
   }, [
-    endSession,
     hostPhase,
     hostCode,
     isFinalQuestion,
     openQuestion,
     questionIndex,
+    showLeaderboard,
     settings.autoAdvanceAfterReveal
   ]);
 
@@ -224,7 +224,7 @@ function HostSessionPage() {
               </label>
               {hostSession.phase === "answer_reveal" && settings.autoAdvanceAfterReveal ? (
                 <p className="mt-3 text-sm text-dusk/75">
-                  Automatischer Wechsel ist aktiv. Nach 5 Sekunden geht es direkt zur nächsten Frage oder ins Finale.
+                  Automatischer Wechsel ist aktiv. Nach 5 Sekunden geht es direkt zur nächsten Frage oder bei der letzten Frage zuerst in die Rangliste.
                 </p>
               ) : null}
             </GlassPanel>

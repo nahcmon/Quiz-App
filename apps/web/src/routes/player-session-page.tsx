@@ -181,6 +181,11 @@ function PlayerSessionPage() {
   const playerResult = playerSession.finalResults?.players.find(
     (player) => player.playerId === playerSession.playerId
   );
+  const currentQuestionNumber = Math.min(
+    Math.max(1, playerSession.currentQuestionIndex + 1),
+    Math.max(1, playerSession.totalQuestions)
+  );
+  const questionProgressLabel = `${currentQuestionNumber}/${playerSession.totalQuestions}`;
 
   return (
     <PageShell
@@ -212,12 +217,18 @@ function PlayerSessionPage() {
                 : ""}
       </div>
 
+      <div className="mb-6 flex flex-wrap gap-3">
+        <div className="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-dusk shadow-panel">
+          Frage {questionProgressLabel}
+        </div>
+      </div>
+
       {playerSession.phase === "lobby" || playerSession.phase === "countdown" ? (
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <GlassPanel>
             <SectionHeading
               title="Warteraum"
-              subtitle="Bleib auf diesem Bildschirm, bis der Moderator startet."
+              subtitle={`Bleib auf diesem Bildschirm. Es geht gleich mit Frage ${questionProgressLabel} los.`}
             />
             <p className="mt-4 text-lg text-dusk/80">
               Du bist verbunden als <strong>{playerSession.playerName}</strong>.
@@ -281,7 +292,7 @@ function PlayerSessionPage() {
             {currentQuestion ? (
               <div className="space-y-6">
                 <SectionHeading
-                  title={`Frage ${playerSession.currentQuestionIndex + 1}`}
+                  title={`Frage ${playerSession.currentQuestionIndex + 1} von ${playerSession.totalQuestions}`}
                   subtitle={`${currentQuestion.timerSeconds}s · ${currentQuestion.basePoints} Basispunkte · ${formatScoringModeLabel(currentQuestion.scoringMode)}`}
                 />
                 <TimerBar
@@ -320,7 +331,7 @@ function PlayerSessionPage() {
           <GlassPanel>
             <SectionHeading
               title="Antwortauflösung"
-              subtitle="Hier siehst du sofort, ob du richtig lagst."
+              subtitle={`Frage ${questionProgressLabel} · Hier siehst du sofort, ob du richtig lagst.`}
             />
             {currentQuestion ? (
               <>
@@ -354,7 +365,10 @@ function PlayerSessionPage() {
       {playerSession.phase === "leaderboard" ? (
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <GlassPanel>
-            <SectionHeading title="Dein Stand" subtitle="Aktualisiert nach dieser Runde." />
+            <SectionHeading
+              title="Dein Stand"
+              subtitle={`Nach Frage ${questionProgressLabel} aktualisiert.`}
+            />
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Rang</p>
@@ -376,7 +390,10 @@ function PlayerSessionPage() {
             </div>
           </GlassPanel>
           <GlassPanel>
-            <SectionHeading title="Rangliste" subtitle="Stabile Gleichstands-Regeln." />
+            <SectionHeading
+              title="Rangliste"
+              subtitle={`Frage ${questionProgressLabel} · Stabile Gleichstands-Regeln.`}
+            />
             <div className="mt-5">
               <Suspense
                 fallback={<RosterFallback items={leaderboardRows} emphasisTopThree />}
