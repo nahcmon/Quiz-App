@@ -80,8 +80,8 @@ export function PageShell({
           paddingBottom: "max(2.5rem, env(safe-area-inset-bottom, 0px))"
         }}
       >
-        <header className="glass-surface mb-8 rounded-[2rem] border border-white/50 px-4 py-4 shadow-panel">
-          <nav className="flex flex-wrap gap-2 text-sm font-semibold">
+        <header className="glass-surface mb-8 w-full rounded-[2rem] border border-white/50 px-4 py-4 shadow-panel lg:w-fit lg:self-center">
+          <nav className="flex flex-wrap justify-center gap-2 text-sm font-semibold">
             <NavLink to="/" className={({ isActive }) => navigationClassName(isActive)}>
               Start
             </NavLink>

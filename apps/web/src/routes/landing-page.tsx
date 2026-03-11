@@ -62,10 +62,10 @@ function LandingPage() {
       eyebrow="Echtzeit-Mehrspieler"
       actions={<Button as="link" href="/join">Mit Code beitreten</Button>}
     >
-      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-start">
         <GlassPanel
           surface="clear"
-          className="hero-panel text-white"
+          className="hero-panel self-start text-white"
         >
           <div className="space-y-6">
             <span className="inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.24em] text-mint">
