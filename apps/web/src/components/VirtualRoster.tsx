@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useMemo, useRef } from "react";
 
+import { useMobilePerformanceMode } from "../lib/mobilePerformance";
+
 interface VirtualRosterRow {
   id: string;
   title: string;
@@ -18,6 +20,7 @@ export function VirtualRoster({
   items,
   emphasisTopThree = false
 }: VirtualRosterProps) {
+  const mobilePerformanceMode = useMobilePerformanceMode();
   const parentRef = useRef<HTMLDivElement | null>(null);
   const rowVirtualizer = useVirtualizer({
     count: items.length,
@@ -29,6 +32,30 @@ export function VirtualRoster({
   const virtualRows = rowVirtualizer.getVirtualItems();
   const totalSize = rowVirtualizer.getTotalSize();
   const rankedItems = useMemo(() => items, [items]);
+
+  if (mobilePerformanceMode) {
+    return (
+      <div className="max-h-[28rem] overflow-auto rounded-[1.8rem] border border-white/60 bg-white/92 shadow-panel">
+        {rankedItems.map((item, index) => {
+          const topThree = emphasisTopThree && index < 3;
+          return (
+            <div
+              key={item.id}
+              className={`flex items-center justify-between border-b border-slate-100 px-4 py-4 ${
+                topThree ? "bg-gradient-to-r from-mint/20 via-white to-sun/20" : "bg-transparent"
+              }`}
+            >
+              <div>
+                <p className="font-display text-lg font-bold text-ink">{item.title}</p>
+                <p className="text-sm text-dusk/75">{item.subtitle}</p>
+              </div>
+              <p className="font-display text-xl font-bold text-ocean">{item.trailing}</p>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div

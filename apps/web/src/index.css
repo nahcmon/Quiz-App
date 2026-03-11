@@ -22,6 +22,8 @@
   color: #07111f;
   background: #f8fbff;
   font-family: "Manrope", sans-serif;
+  --surface-panel-bg: rgba(255, 255, 255, 0.78);
+  --surface-panel-blur: 14px;
 }
 
 html {
@@ -63,6 +65,30 @@ select {
 
 .segmented-code-grid {
   contain: layout paint;
+}
+
+.glass-surface {
+  background: var(--surface-panel-bg);
+  -webkit-backdrop-filter: blur(var(--surface-panel-blur));
+  backdrop-filter: blur(var(--surface-panel-blur));
+}
+
+.glass-overlay {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.timer-bar-fill {
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.timer-urgent-pulse {
+  animation: timer-urgent-pulse 700ms ease-in-out infinite;
+}
+
+.timer-text-critical {
+  animation: timer-text-critical 700ms ease-in-out infinite;
 }
 
 .ui-pop-in {
@@ -210,13 +236,75 @@ select {
   }
 }
 
+@keyframes timer-urgent-pulse {
+  0% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(1.04);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes timer-shrink {
+  0% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes timer-text-critical {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .ui-pop-in,
   .ui-shake-in,
   .segmented-code-char-pop,
   .segmented-code-status-pop,
   .segmented-code-status-fade,
-  .segmented-code-shake {
+  .segmented-code-shake,
+  .timer-urgent-pulse,
+  .timer-text-critical {
     animation: none;
+  }
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  :root {
+    --shadow-panel: 0 12px 32px rgba(10, 17, 40, 0.12);
+    --surface-panel-bg: rgba(255, 255, 255, 0.94);
+    --surface-panel-blur: 0px;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .glass-surface,
+  .glass-overlay {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }

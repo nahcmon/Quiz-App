@@ -20,7 +20,7 @@ export function ActionCard({
     <motion.button
       type="button"
       onClick={onClick}
-      className="group relative overflow-hidden rounded-[2rem] border border-white/60 bg-white/75 p-6 text-left shadow-panel backdrop-blur"
+      className="glass-surface group relative overflow-hidden rounded-[2rem] border border-white/60 p-6 text-left shadow-panel"
       whileHover={{ scale: 1.02, y: -3, transition: { duration: 0.14 } }}
       whileTap={{ scale: 0.98, transition: { duration: 0.09 } }}
     >
