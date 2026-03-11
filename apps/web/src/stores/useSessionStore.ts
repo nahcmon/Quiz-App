@@ -357,9 +357,9 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     socket.on("session:ended", (payload) => {
       const state = get();
       const library = useLibraryStore.getState();
-      if (state.role === "host") {
-        library.saveHostResult(payload.finalResults);
-      } else if (state.role === "player" && state.actorId) {
+      library.saveHostResult(payload.finalResults);
+
+      if (state.role === "player" && state.actorId) {
         const player = payload.finalResults.players.find(
           (candidate) => candidate.playerId === state.actorId
         );

@@ -104,7 +104,7 @@ export function loadSettings(): Settings {
     soundEnabled: true,
     theme: "light",
     hostDensity: "comfortable",
-    autoAdvanceAfterReveal: false,
+    autoAdvanceAfterReveal: true,
     lastJoinName: ""
   };
 

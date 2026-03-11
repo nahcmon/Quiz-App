@@ -19,7 +19,7 @@ export const SettingsSchema = z.object({
   soundEnabled: z.boolean().default(true),
   theme: z.enum(["system", "light"]).default("light"),
   hostDensity: z.enum(["comfortable", "compact"]).default("comfortable"),
-  autoAdvanceAfterReveal: z.boolean().default(false),
+  autoAdvanceAfterReveal: z.boolean().default(true),
   lastJoinName: z.string().trim().max(32).default("")
 });
 

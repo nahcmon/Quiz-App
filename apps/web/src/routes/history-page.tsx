@@ -60,12 +60,12 @@ function HistoryPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <GlassPanel>
           <SectionHeading
-            title="Moderierte Sitzungen"
-            subtitle="Alle abgeschlossenen Runden, die du geleitet hast."
+            title="Komplette Runden"
+            subtitle="Gespeicherte Endergebnisse mit allen Mitspielern und Platzierungen."
           />
           <div className="mt-5 grid gap-4">
             {hostResults.length === 0 ? (
-              <p className="text-sm text-dusk/75">Noch keine moderierten Runden.</p>
+              <p className="text-sm text-dusk/75">Noch keine gespeicherten Endergebnisse.</p>
             ) : (
               hostResults.map((result) => (
                 <div
@@ -76,9 +76,26 @@ function HistoryPage() {
                   <p className="mt-2 text-sm text-dusk/75">
                     {result.totalPlayers} Spieler · {formatDate(result.endedAt)}
                   </p>
-                  <p className="mt-3 text-sm font-semibold text-ocean">
-                    Sieger: {result.leaderboard[0]?.playerName ?? "—"}
-                  </p>
+                  <div className="mt-4 grid gap-2">
+                    {result.leaderboard.map((entry) => (
+                      <div
+                        key={`${result.code}-${result.endedAt}-${entry.playerId}`}
+                        className="flex items-center justify-between rounded-[1rem] bg-slate-50 px-3 py-3"
+                      >
+                        <div>
+                          <p className="font-semibold text-ink">
+                            #{entry.rank} {entry.playerName}
+                          </p>
+                          <p className="text-xs text-dusk/65">
+                            {entry.correctCount} richtig
+                          </p>
+                        </div>
+                        <p className="font-display text-lg font-bold text-ocean">
+                          {entry.score}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))
             )}

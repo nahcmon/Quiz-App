@@ -17,7 +17,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     soundEnabled: true,
     theme: "light",
     hostDensity: "comfortable",
-    autoAdvanceAfterReveal: false,
+    autoAdvanceAfterReveal: true,
     lastJoinName: ""
   },
   initialized: false,
