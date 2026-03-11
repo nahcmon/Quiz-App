@@ -130,7 +130,10 @@ function HostSessionPage() {
       ) : (
         <div className="grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
           <div className="space-y-6">
-            <GlassPanel className="bg-gradient-to-br from-ink via-dusk to-ocean text-white">
+            <GlassPanel
+              surface="clear"
+              className="hero-panel text-white"
+            >
               <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-3">
                   <p className="text-sm font-semibold uppercase tracking-[0.24em] text-mint">

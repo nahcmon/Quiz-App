@@ -35,9 +35,14 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(94, 242, 195, 0.18), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(255, 123, 72, 0.14), transparent 36%),
-    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+    radial-gradient(circle at top left, rgba(94, 242, 195, 0.22), transparent 34%),
+    radial-gradient(circle at top right, rgba(255, 123, 72, 0.16), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 123, 72, 0.12), transparent 34%),
+    linear-gradient(180deg, #f1fbf8 0%, #f8fbff 28%, #eef5ff 100%);
+}
+
+#root {
+  min-height: 100dvh;
 }
 
 button,
@@ -68,7 +73,7 @@ select {
 }
 
 .glass-surface {
-  background: var(--surface-panel-bg);
+  background-color: var(--surface-panel-bg);
   -webkit-backdrop-filter: blur(var(--surface-panel-blur));
   backdrop-filter: blur(var(--surface-panel-blur));
 }
@@ -76,6 +81,19 @@ select {
 .glass-overlay {
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+}
+
+.hero-panel {
+  background:
+    radial-gradient(circle at top left, rgba(94, 242, 195, 0.12), transparent 34%),
+    linear-gradient(145deg, #07111f 0%, #10203d 54%, #0c4fd9 100%);
+  color: #fff;
+}
+
+.hero-panel-soft {
+  background:
+    radial-gradient(circle at top left, rgba(94, 242, 195, 0.18), transparent 30%),
+    linear-gradient(135deg, rgba(94, 242, 195, 0.18) 0%, rgba(255, 255, 255, 0.92) 48%, rgba(12, 79, 217, 0.12) 100%);
 }
 
 .timer-bar-fill {

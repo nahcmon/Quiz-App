@@ -71,14 +71,22 @@ function Button({
 
 function GlassPanel({
   children,
-  className
+  className,
+  surface = "glass"
 }: {
   children: ReactNode;
   className?: string;
+  surface?: "glass" | "soft" | "clear";
 }) {
+  const surfaceClasses = {
+    glass: "glass-surface border-white/60",
+    soft: "border-slate-200 bg-slate-50/92",
+    clear: "border-white/60"
+  } as const;
+
   return (
     <div
-      className={`glass-surface rounded-[2rem] border border-white/60 p-6 shadow-panel ${className ?? ""}`}
+      className={`rounded-[2rem] border p-6 shadow-panel ${surfaceClasses[surface]} ${className ?? ""}`}
     >
       {children}
     </div>

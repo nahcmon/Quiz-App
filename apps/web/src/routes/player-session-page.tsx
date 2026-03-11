@@ -223,19 +223,19 @@ function PlayerSessionPage() {
               Du bist verbunden als <strong>{playerSession.playerName}</strong>.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              <GlassPanel className="bg-slate-50">
+              <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Aktueller Rang</p>
                 <p className="font-display text-4xl font-black text-ocean">
                   {playerSession.playerRank ?? "—"}
                 </p>
               </GlassPanel>
-              <GlassPanel className="bg-slate-50">
+              <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Punktestand</p>
                 <p className="font-display text-4xl font-black text-ocean">
                   {playerSession.playerScore}
                 </p>
               </GlassPanel>
-              <GlassPanel className="bg-slate-50">
+              <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Beigetretene Spieler</p>
                 <p className="font-display text-4xl font-black text-ocean">
                   {playerSession.counts.total}
@@ -356,13 +356,13 @@ function PlayerSessionPage() {
           <GlassPanel>
             <SectionHeading title="Dein Stand" subtitle="Aktualisiert nach dieser Runde." />
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <GlassPanel className="bg-slate-50">
+              <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Rang</p>
                 <p className="font-display text-4xl font-black text-ocean">
                   {playerSession.playerRank ?? "—"}
                 </p>
               </GlassPanel>
-              <GlassPanel className="bg-slate-50">
+              <GlassPanel surface="soft">
                 <p className="text-sm text-dusk/70">Punktestand</p>
                 <motion.p
                   className="font-display text-4xl font-black text-ocean"
@@ -397,13 +397,13 @@ function PlayerSessionPage() {
             />
             <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
               <div className="space-y-4">
-                <GlassPanel className="bg-slate-50">
+                <GlassPanel surface="soft">
                   <p className="text-sm text-dusk/70">Dein Rang</p>
                   <p className="font-display text-5xl font-black text-ocean">
                     {playerResult?.rank ?? "—"}
                   </p>
                 </GlassPanel>
-                <GlassPanel className="bg-slate-50">
+                <GlassPanel surface="soft">
                   <p className="text-sm text-dusk/70">Dein Punktestand</p>
                   <p className="font-display text-5xl font-black text-ocean">
                     {playerResult?.score ?? playerSession.playerScore}

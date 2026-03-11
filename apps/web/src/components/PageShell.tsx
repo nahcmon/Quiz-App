@@ -31,11 +31,22 @@ export function PageShell({
   return (
     <div className="relative min-h-dvh overflow-hidden bg-cloud text-ink">
       <div className="pointer-events-none absolute inset-0 bg-hero-grid" />
-      {!simplifyAmbientMotion ? (
+      {simplifyAmbientMotion ? (
+        <>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-24 -top-28 h-64 w-64 rounded-full bg-mint/28 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-ember/20 blur-3xl"
+          />
+        </>
+      ) : (
         <>
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute -left-20 top-20 h-64 w-64 rounded-full bg-mint/30 blur-3xl"
+            className="pointer-events-none absolute -left-24 -top-28 h-64 w-64 rounded-full bg-mint/30 blur-3xl"
             animate={{
               x: [0, 26, 0],
               y: [0, 18, 0]
@@ -48,7 +59,7 @@ export function PageShell({
           />
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute right-0 top-1/4 h-72 w-72 rounded-full bg-ember/20 blur-3xl"
+            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-ember/20 blur-3xl"
             animate={{
               x: [0, -22, 0],
               y: [0, 24, 0]
@@ -60,9 +71,15 @@ export function PageShell({
             }}
           />
         </>
-      ) : null}
+      )}
 
-      <div className="relative mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pb-10 pt-5 sm:px-6 lg:px-8">
+      <div
+        className="relative mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pb-10 sm:px-6 lg:px-8"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.25rem)",
+          paddingBottom: "max(2.5rem, env(safe-area-inset-bottom, 0px))"
+        }}
+      >
         <header className="glass-surface mb-8 rounded-[2rem] border border-white/50 px-4 py-4 shadow-panel">
           <nav className="flex flex-wrap gap-2 text-sm font-semibold">
             <NavLink to="/" className={({ isActive }) => navigationClassName(isActive)}>

@@ -65,7 +65,10 @@ function QuizLibraryPage() {
         }}
       />
       {draft ? (
-        <GlassPanel className="mb-6 bg-gradient-to-r from-mint/20 via-white to-ocean/10">
+        <GlassPanel
+          surface="clear"
+          className="hero-panel-soft mb-6"
+        >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-display text-xl font-bold text-ink">Entwurf in Arbeit</p>
