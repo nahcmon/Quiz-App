@@ -120,6 +120,15 @@ export function PageShell({
           </section>
           {children}
         </main>
+
+        <footer className="mt-10 flex flex-wrap items-center justify-center gap-3 border-t border-white/50 pt-5 text-xs font-semibold text-dusk/75">
+          <NavLink to="/privacy" className={({ isActive }) => navigationClassName(isActive)}>
+            Datenschutz / Privacy
+          </NavLink>
+          <NavLink to="/legal" className={({ isActive }) => navigationClassName(isActive)}>
+            Rechtsstatus / Legal Status
+          </NavLink>
+        </footer>
       </div>
     </div>
   );

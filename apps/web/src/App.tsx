@@ -17,6 +17,8 @@ const JoinNamePage = lazy(() => import("./routes/join-name-page"));
 const PlayerSessionPage = lazy(() => import("./routes/player-session-page"));
 const HistoryPage = lazy(() => import("./routes/history-page"));
 const SettingsPage = lazy(() => import("./routes/settings-page"));
+const PrivacyPage = lazy(() => import("./routes/privacy-page"));
+const LegalStatusPage = lazy(() => import("./routes/legal-status-page"));
 
 function useAppReducedMotion() {
   const motion = useSettingsStore((state) => state.settings.motion);
@@ -60,6 +62,8 @@ export default function App() {
             <Route path="/player/session/:code" element={<PlayerSessionPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/legal" element={<LegalStatusPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
